@@ -1,0 +1,18 @@
+{
+  "name": "Copiest",
+  "description": "The most copy way to copy a link",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "alarms",
+    "scripting",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Click to copy a link"
+  }
+}
