@@ -1,5 +1,5 @@
 chrome.action.setBadgeBackgroundColor(
-  { color: 'green' },
+  { color: '#F2C94C' },
 );
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
@@ -11,8 +11,8 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 chrome.action.onClicked.addListener(async (tab) => {
   const html = getHTMLForClipboard(tab);
   await saveHTMLToClipboard(tab, html);
-  await setBadge('👍');
-  chrome.alarms.create('clearBadge', { when: Date.now() + 3000 });
+  await setBadge('✓');
+  chrome.alarms.create('clearBadge', { when: Date.now() + 1000 });
 });
 
 function getHTMLForClipboard(tab) {
