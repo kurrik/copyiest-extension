@@ -1,18 +1,18 @@
 {
   "name": "Copiest",
   "description": "The most copy way to copy a link",
-  "version": "1.0",
+  "version": "1.1.0",
   "manifest_version": 3,
   "permissions": [
     "activeTab",
-    "alarms",
-    "scripting"
+    "alarms"
   ],
   "background": {
     "service_worker": "background.js"
   },
   "action": {
     "default_title": "Get that link!",
+    "default_popup": "popup.html",
     "default_icon": {
       "16": "images/icon16.png",
       "24": "images/icon24.png",
