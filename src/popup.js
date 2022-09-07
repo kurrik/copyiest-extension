@@ -1,5 +1,5 @@
-const WINDOW_DELAY_MS=1000;
-const BADGE_DELAY_MS=1000;
+const WINDOW_DELAY_MS = 1000;
+const BADGE_DELAY_MS = 1000;
 
 async function setBadge(text) {
   return chrome.action.setBadgeText(
@@ -8,8 +8,8 @@ async function setBadge(text) {
 }
 
 function delay(t, v) {
-  return new Promise(function(resolve) {
-      setTimeout(resolve.bind(null, v), t)
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, v), t)
   });
 }
 
@@ -20,22 +20,34 @@ async function getCurrentTab() {
 }
 
 function getHTMLForClipboard(tab) {
-  return `<a href="${tab.url}">${tab.title}</a>`;
+  return `<meta charset="utf-8"><span><a href="${tab.url}">${tab.title}</a></span>`;
 }
 
-async function saveHTMLToClipboard(html) {
+function getTextForClipboard(tab) {
+  return `${tab.title}`;
+}
+
+async function saveToClipboard(html, text) {
   return delay(10).then(() => {
-    const type = 'text/html';
-    const blob = new Blob([html], { type });
-    const data = [new ClipboardItem({ [type]: blob })];
-    return navigator.clipboard.write(data);
+    const types = [
+      { type: 'text/html', value: html },
+      { type: 'text/plain', value: text },
+    ];
+    const clipboardItemData = {};
+    for ({ type, value } of types) {
+      const blob = new Blob([value], { type });
+      clipboardItemData[type] = blob;
+    }
+    const clipboardItem = [new ClipboardItem(clipboardItemData)];
+    return navigator.clipboard.write(clipboardItem);
   });
 }
 
 async function run() {
   const tab = await getCurrentTab().catch((error) => output(`Problem getting current tab: ${error}`));
   const html = getHTMLForClipboard(tab);
-  await saveHTMLToClipboard(html).catch((error) => output(`Problem saving to clipboard: ${error}`));
+  const text = getTextForClipboard(tab);
+  await saveToClipboard(html, text).catch((error) => output(`Problem saving to clipboard: ${error}`));
   await setBadge('✓').catch((error) => output(`Problem setting the badge: ${error}`));;
   chrome.alarms.create('clearBadge', { when: Date.now() + BADGE_DELAY_MS });
 }
