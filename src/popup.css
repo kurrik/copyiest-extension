@@ -11,13 +11,29 @@ body {
   flex-direction: row;
 }
 
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
 .output {
   flex-grow: 1;
   flex-shrink: 0;
   flex-basis: auto;
   min-width: 50px;
-  align-self: center;
-  padding: 2px;
+  padding: 5px;
+  margin: 5px;
+  background: #f0f0f0;
+  border-radius: 5px;
+  align-self: stretch;
+  text-align: center;
+}
+
+.links a {
+  min-width: 250px;
+  padding: 5px;
+  margin: 5px;
+  display: block;
 }
 
 .icon {
