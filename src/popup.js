@@ -32,7 +32,7 @@ function getUrlForClipboard(tab) {
   return tab.url;
 }
 
-async function saveToClipboard(html, text) {
+async function saveToClipboardNavigator(html, text) {
   return await delay(20).then(async () => {
     const types = [
       { type: 'text/html', value: html },
@@ -48,13 +48,25 @@ async function saveToClipboard(html, text) {
   });
 }
 
+async function saveToClipboardExecCommand(html, text) {
+  const buffer = document.getElementById('clipboardBuffer');
+  buffer.innerHTML = html;
+  const range = document.createRange();
+  range.selectNodeContents(buffer);
+  const select = window.getSelection();
+  select.removeAllRanges();
+  select.addRange(range);
+  const result = document.execCommand('cut');
+  return Promise.resolve(result);
+}
+
 async function run() {
   const tab = await getCurrentTab().catch((error) => output(`Problem getting current tab: ${error}`));
   const html = getHTMLForClipboard(tab);
   const text = getTextForClipboard(tab);
   const url = getUrlForClipboard(tab);
   const saveLink = async () => {
-    return await saveToClipboard(html, text)
+    return await saveToClipboardExecCommand(html, text)
       .then(() => {
         output('Copied!', true)
         window.setTimeout(window.close, WINDOW_DELAY_MS);
@@ -83,6 +95,7 @@ function output(text, clear) {
     elem.innerText = '';
   }
   elem.innerText += text;
+  chrome.runtime.sendMessage({ name: 'log', payload: text });
 }
 
 function addLink(text, url, onClick) {

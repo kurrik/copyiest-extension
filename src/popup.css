@@ -41,3 +41,8 @@ body {
   flex-shrink: 1;
   flex-basis: content;
 }
+
+#clipboardBuffer {
+  height: 1px;
+  overflow: hidden;
+}
