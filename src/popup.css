@@ -46,3 +46,8 @@ body {
   height: 1px;
   overflow: hidden;
 }
+
+#clipboardBuffer a {
+  font-family: initial;
+  font-size: initial;
+}
