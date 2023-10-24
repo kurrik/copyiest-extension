@@ -15,3 +15,4 @@ Clicking the extension icon copies the current tab's title and URL as a rich tex
  * 1.2.0 — OSX Ventura seems to have broken the ability to automatically copy a link.  Added UI to fall back to until automatic copying can be fixed.
  * 1.3.0 — Use `document.execCommand` instead of `navigator.clipboard` to store data.  Should fix automatic copying.
  * 1.3.1 — Remove formatting on copied text.
+ * 1.3.2 — Fix bug with popup not rendering full width.  Add options configuration screen.
