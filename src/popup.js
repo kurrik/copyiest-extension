@@ -59,6 +59,7 @@ async function saveToClipboardExecCommand(html, text) {
   select.removeAllRanges();
   select.addRange(range);
   const result = document.execCommand('cut');
+  buffer.blur();
   return Promise.resolve(result);
 }
 
