@@ -6,6 +6,18 @@ body {
   margin: 4px;
 }
 
+h1 {
+  line-height: 1;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+body.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .container {
   display: flex;
   flex-direction: row;
@@ -47,6 +59,11 @@ body {
 
 .hidden {
   display: none !important;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 #clipboardBuffer {
