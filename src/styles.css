@@ -42,6 +42,10 @@ body {
   flex-basis: content;
 }
 
+.hidden {
+  display: none !important;
+}
+
 #clipboardBuffer {
   height: 1px;
   overflow: hidden;

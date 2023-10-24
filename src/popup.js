@@ -2,6 +2,8 @@ const WINDOW_DELAY_MS = 1000;
 const BADGE_DELAY_MS = 1000;
 const TIMEOUT_DELAY_MS = 500;
 
+import { loadOptions, output } from './common.js';
+
 async function setBadge(text) {
   return chrome.action.setBadgeText(
     { text },
@@ -61,41 +63,37 @@ async function saveToClipboardExecCommand(html, text) {
 }
 
 async function run() {
-  const tab = await getCurrentTab().catch((error) => output(`Problem getting current tab: ${error}`));
+  const options = await loadOptions();
+  const tab = await getCurrentTab().catch((error) => output('#output', `Problem getting current tab: ${error}`));
   const html = getHTMLForClipboard(tab);
   const text = getTextForClipboard(tab);
   const url = getUrlForClipboard(tab);
   const saveLink = async () => {
     return await saveToClipboardExecCommand(html, text)
       .then(() => {
-        output('Copied!', true)
-        window.setTimeout(window.close, WINDOW_DELAY_MS);
+        output('#output', 'Copied!', true);
+        if (options.autoClose) {
+          window.setTimeout(window.close, WINDOW_DELAY_MS);
+        } else {
+          console.log('DEBUG: Not closing popup since the `autoClose` setting is off.')
+        }
       })
       .catch((error) => {
-        output(`Problem saving to clipboard: ${error}`)
+        output('#output', `Problem saving to clipboard: ${error}`);
       });
   }
   addLink(text, url, (evt) => {
     evt.preventDefault();
     saveLink();
   });
-  output('Copying...');
+  output('#output', 'Copying...');
   const timeout = window.setTimeout(() => {
-    output('Problem copying automatically... click a link below to try again.', true);
+    output('#output', 'Problem copying automatically... click a link below to try again.', true);
   }, TIMEOUT_DELAY_MS);
   await saveLink();
   window.clearTimeout(timeout);
-  await setBadge('✓').catch((error) => output(`Problem setting the badge: ${error}`));;
+  await setBadge('✓').catch((error) => output('#output', `Problem setting the badge: ${error}`));;
   chrome.alarms.create('clearBadge', { when: Date.now() + BADGE_DELAY_MS });
-}
-
-function output(text, clear) {
-  const elem = document.getElementById('output');
-  if (clear === true) {
-    elem.innerText = '';
-  }
-  elem.innerText += text;
-  chrome.runtime.sendMessage({ name: 'log', payload: text });
 }
 
 function addLink(text, url, onClick) {
@@ -111,5 +109,5 @@ function addLink(text, url, onClick) {
 
 run()
   .catch((error) => {
-    output(`Error: ${error}`);
+    output('#output', `Error: ${error}`);
   });
